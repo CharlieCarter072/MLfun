@@ -6,14 +6,17 @@ from Math.Math import *
 from Math.Weights import *
 import random
 
+print("\nStarted program, loading data & weights...\n")
 
 layer1weights, layer2weights, layer3weights = rand_weights()
 trainData = loadTrainingData()
-teast = trainData[0].split(",")
+inputMatrix = [list(map(int, (i.strip().split(",")[1::] + ["1"]))) for i in trainData]
+inputLabels = [i[0] for i in trainData]
+
+print("Loading complete\n")
 def run(inp):
     pass
 
 
-print(trainData[0])
-print(teast)
-print(len(teast))
+print(len(inputMatrix[0]))
+print(inputMatrix[0])
