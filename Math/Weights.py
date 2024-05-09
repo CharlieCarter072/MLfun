@@ -1,4 +1,4 @@
-from Math.Matrix import *
+from Math.matrix import *
 import random
 
 

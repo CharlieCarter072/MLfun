@@ -1,4 +1,5 @@
 import math
+from matrix import Matrix
 
 
 def activation(num):
@@ -7,8 +8,9 @@ def activation(num):
 
 def mat_mul(a, b):
     finalMatrix = []
-    for i in range(len(a)):  # for rows of weights in a
-        finalMatrix.append([dot_product(a[i], [row[column] for row in b]) for column in range(len(a))])
+    for i in range(a.rows()):  # for rows of weights in a
+        finalMatrix.append([dot_product(a[i], [row[column] for row in b]) for column in range(a.rows())])
+    finalMatrix = Matrix(finalMatrix)
     return finalMatrix
 
 

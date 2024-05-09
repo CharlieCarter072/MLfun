@@ -24,9 +24,9 @@ def convert(i):
 
 
 def run(inp):  # takes number values input, outputs list of predictions
-    layer1activation = mat_mulA(inp, layer1weights)
-    layer2activation = mat_mulA(layer1activation, layer2weights)
-    final = mat_mulA(layer2activation, layer3weights)
+    layer1activation = mat_mul(inp, layer1weights)
+    layer2activation = mat_mul(layer1activation, layer2weights)
+    final = mat_mul(layer2activation, layer3weights)
     return final
 
 
