@@ -5,8 +5,11 @@ def activation(num):
     return 1 / (1 + (math.e ** (0 - num)))
 
 
-def mat_mulA(a, b):  # only for vector * screwed up matrix
-    return [activation(dot_product(a, i)) for i in b]
+def mat_mul(a, b):
+    finalMatrix = []
+    for i in range(len(a)):  # for rows of weights in a
+        finalMatrix.append([dot_product(a[i], [row[column] for row in b]) for column in range(len(a))])
+    return finalMatrix
 
 
 def dot_product(a, b):  # dot product, scores similarity
@@ -30,7 +33,7 @@ def label(n):
     return easy[n - 1]
 
 
-def los():
+def loss():
     pass
 # loss function
 #ugggh

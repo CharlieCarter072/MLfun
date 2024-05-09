@@ -1,18 +1,18 @@
 # input vector, multiply with weights -> activation for next layer (don't forget bias)
-# input, 1st layer (16), 2nd layer (16), output (10)
+# input (), 1st layer (16), 2nd layer (16), output (10)
 
 from LFS.Load_Data import *
 from Math.MathFuncts import *
 from Math.Weights import *
 import random
 
-print("\nStarted program, loading data & weights...\n")
+print("\nStarted program, loading data & weights...\n")  # initialize program
 
-layer1weights, layer2weights, layer3weights = rand_weights()
-trainData = loadTrainingData()
-trainMatrix = [list(map(int, (i.strip().split(",")[1::] + ["1"]))) for i in trainData]
-displayLabels = [int(i[0]) for i in trainData]
-trainLabels = [label(j) for j in displayLabels]
+layer1weights, layer2weights, layer3weights = rand_weights()  # randomly generates weight matrices
+trainData = loadTrainingData()  # loads training data into a list of lists of brightness values
+trainMatrix = [list(map(int, (i.strip().split(",")[1::] + ["1"]))) for i in trainData]  # Adds 1 for the bias value
+displayLabels = [int(i[0]) for i in trainData]  # identifies the handwritten value in trainData
+trainLabels = [label(j) for j in displayLabels]  # the correct output vector for each handwritten number
 print(displayLabels[0])
 print(type(displayLabels[0]))
 
@@ -23,7 +23,7 @@ def convert(i):
     return i.index(max(i)) + 1
 
 
-def run(inp):
+def run(inp):  # takes number values input, outputs list of predictions
     layer1activation = mat_mulA(inp, layer1weights)
     layer2activation = mat_mulA(layer1activation, layer2weights)
     final = mat_mulA(layer2activation, layer3weights)
