@@ -11,4 +11,12 @@ AxB * BxC = A*C where XxY and X is height, Y is width
 structure:
 
 Input layer (vector len 784)
-Layer1Weights (matrix
+Layer1Weights (matrix)
+
+
+To Do:
+
+develop network class
+test layer class with data
+start research on backprop. and gradient descent
+make small scale savable data sets from total

@@ -1,10 +1,8 @@
 # input vector, multiply with weights -> activation for next layer (don't forget bias)
 # input (), 1st layer (16), 2nd layer (16), output (10)
+# due to changes, this whole file will probably have to be redone
 
 from LFS.Load_Data import *
-from Math.MathFuncts import *
-from Math.Weights import *
-import random
 
 print("\nStarted program, loading data & weights...\n")  # initialize program
 
