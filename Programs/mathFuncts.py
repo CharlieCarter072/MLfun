@@ -1,5 +1,5 @@
-import math  # use) still useful, file is modified so edits may have to be made
-from UnitTests import Matrix
+import math
+from Programs.matrix import Matrix
 
 
 def activation(num):  # activation function
@@ -32,4 +32,11 @@ def label(n):
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         ]
     return labels[n - 1]
+
+def vectorize(lst):
+    return Matrix([[i] for i in lst])
+
+
+def fix_brightness_values(x):
+    return int(x)/255
 

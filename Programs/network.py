@@ -1,4 +1,5 @@
 from random import random
+from Programs.mathFuncts import *
 
 
 class Layer:  # takes input, multiplies it with weights, normalizes result, and outputs
@@ -24,11 +25,22 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
     def feed_forward(self, data_in):  # input is a matrix
         data_in.add_row([1])
         unnormalized_output_data = mat_mul(self.weights, data_in)
-        return [[activation(i[0])] for i in unnormalized_output_data]
+        return Matrix([[activation(i[0])] for i in unnormalized_output_data])
 
     def backpropagation(self):
         pass  # ?????
 
+    def load_weights(self):
+        pass
+
 
 class Network:
-    pass
+    def __init__(self, hidden_layer_1_size, hidden_layer_2_size):
+        self.layer_1 = Layer(784, hidden_layer_1_size)
+        self.layer_2 = Layer(hidden_layer_1_size, hidden_layer_2_size)
+        self.layer_3 = Layer(hidden_layer_2_size, 10)
+
+    def raw_prediction(self, input_data):
+        hidden_layer_1 = self.layer_1.feed_forward(input_data)
+        hidden_layer_2 = self.layer_2.feed_forward(hidden_layer_1)
+        return self.layer_3.feed_forward(hidden_layer_2)
