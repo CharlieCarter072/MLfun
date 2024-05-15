@@ -8,7 +8,7 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
         self.rows = row_count
         self.columns = column_count
 
-        self.initialize_weights(column_count, row_count)
+        self.randomize_weights(column_count, row_count)
 
     def __str__(self):
         return str(self.weights)
@@ -16,7 +16,7 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
     def __getitem__(self, item):
         return self.weights[item]
 
-    def initialize_weights(self, x, y):
+    def randomize_weights(self, x, y):
         self.weights = Matrix([[(random() - .5) for i in range(x + 1)] for j in range(y)])  # x+1 to add a bias value
 
     def edit_weight(self, x, y, new_value):
@@ -47,6 +47,7 @@ class Network:
 
     def loss(self, labeled_data_batch):
         total = 0
-        difference = 0
-        pass
+        for i in range(labeled_data_batch.column_count()):
+            total += difference_squared(label_to_vector(labeled_data_batch.column(i).get_label()), self.raw_prediction(labeled_data_batch.column(i).get_data()))
+        return total / labeled_data_batch.column_count()
 

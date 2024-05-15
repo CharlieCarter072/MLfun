@@ -14,16 +14,14 @@ def main():
 
     display_digit(data_matrix.column(test_value).get_data())
 
-    Testing_network = Network(16, 16)  # clean
-    test_input = data_matrix.column(test_value).get_data()  # fix this to be in the right place (heck naw + vectorize)
-    output = Testing_network.raw_prediction(test_input)
+    testing_network = Network(16, 16)  # clean
+    test_input = data_matrix.column(test_value).get_data()
+    output = testing_network.raw_prediction(test_input)
     print(output)
     print(f"\nPrediction: {[output_to_digit(output)]}")
-    print(f"Actual: {data_matrix.column(test_value).get_label()}\n")  # heck naw * 2
-    print(f"Test label: {data_matrix.column(test_value).get_label()}")
-    print(f"Test data: {data_matrix.column(test_value).get_data()}")
-    print(f"\nLabel test: {convert_to_label(data_matrix.column(test_value).get_label()[0])}")
-
+    print(f"Actual: {data_matrix.column(test_value).get_label()}\n")
+    print(f"\nLabel test: {label_to_vector(data_matrix.column(test_value).get_label()[0])}")
+    print(f"\nLoss test: {testing_network.loss(data_matrix)}")
 
 
 main()

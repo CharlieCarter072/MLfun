@@ -12,13 +12,13 @@ class Matrix:
         return self.items[item]
 
     def row_count(self):
-        return len(self.items)
+        return len(list(self.items))
 
     def column_count(self):
         if self.row_count() == 0:
             return 0
         else:
-            return len(self.items[0])
+            return len(list(self.items[0]))
 
     def row(self, row_index):
         return Matrix(self.items[row_index])

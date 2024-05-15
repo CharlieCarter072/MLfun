@@ -5,10 +5,10 @@ def activation(num):  # activation function
     return 1 / (1 + (math.e ** (0 - num)))
 
 
-def convert_to_label(n):
+def label_to_vector(n):
     labels = [[0] for i in range(10)]
     for i in range(len(labels)):
-        if i == (n-1):
+        if i == n:
             labels[i] = [1]
     return labels
 
@@ -23,3 +23,8 @@ def output_to_digit(output):
         if output[i][0] > output[prediction_value][0]:
             prediction_value = i
     return prediction_value
+
+
+def difference_squared(expected_output, actual_output):
+    return sum([(expected_output[i][0] - actual_output[i][0]) ** 2 for i in range(10)])
+
