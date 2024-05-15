@@ -1,5 +1,5 @@
 from unittest import TestCase
-from Programs.mathFuncts import *
+from Programs.matrix import *
 
 
 class TestDotProd(TestCase):

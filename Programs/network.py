@@ -1,5 +1,5 @@
 from random import random
-from Programs.mathFuncts import *
+from Programs.matrix import *
 
 
 class Layer:  # takes input, multiplies it with weights, normalizes result, and outputs
@@ -44,3 +44,9 @@ class Network:
         hidden_layer_1 = self.layer_1.feed_forward(input_data)
         hidden_layer_2 = self.layer_2.feed_forward(hidden_layer_1)
         return self.layer_3.feed_forward(hidden_layer_2)
+
+    def loss(self, labeled_data_batch):
+        total = 0
+        difference = 0
+        pass
+

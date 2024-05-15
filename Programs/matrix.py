@@ -1,3 +1,6 @@
+from Programs.mathFuncts import *
+
+
 class Matrix:
     def __init__(self, items=[]):
         self.items = items
@@ -18,11 +21,32 @@ class Matrix:
             return len(self.items[0])
 
     def row(self, row_index):
-        return self.items[row_index]
+        return Matrix(self.items[row_index])
 
     def column(self, column_index):
-        return [i[column_index] for i in self.items]
+        return Matrix([i[column_index] for i in self.items])
 
     def add_row(self, new_row):  # mostly useful for vectors, hopefully won't have to add an add_column method
         self.items.append(new_row)
 
+    def get_label(self):
+        return Matrix([int(self.items[0][0]*255)])
+
+    def get_data(self):
+        return Matrix(self.items[1::])
+
+
+def mat_mul(a, b):
+    final_matrix = Matrix([[dot_product(a.row(i), b.column(j)) for j in range(b.column_count())] for i in range(a.row_count())])
+    return final_matrix
+
+
+def vectorize(lst):
+    return Matrix([[i] for i in lst])
+
+
+def dot_product(a, b):  # dot product, scores similarity
+    total = 0
+    for i in range(a.row_count()):
+        total += a[i] * b[i]
+    return total

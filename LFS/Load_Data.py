@@ -1,4 +1,4 @@
-from Programs.mathFuncts import *
+from Programs.matrix import *
 
 
 def loadTrainingDataMatrix():  # row 0 is labels,

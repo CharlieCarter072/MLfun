@@ -1,43 +1,25 @@
 import math
-from Programs.matrix import Matrix
 
 
 def activation(num):  # activation function
     return 1 / (1 + (math.e ** (0 - num)))
 
 
-def mat_mul(a, b):
-    final_matrix = Matrix([[dot_product(a.row(i), b.column(j)) for j in range(b.column_count())] for i in range(a.row_count())])
-    return final_matrix
-
-
-def dot_product(a, b):  # dot product, scores similarity
-    total = 0
-    for i in range(len(a)):
-        total += a[i] * b[i]
-    return total
-
-
-def label(n):
-    labels = [
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        ]
-    return labels[n - 1]
-
-
-def vectorize(lst):
-    return Matrix([[i] for i in lst])
+def convert_to_label(n):
+    labels = [[0] for i in range(10)]
+    for i in range(len(labels)):
+        if i == (n-1):
+            labels[i] = [1]
+    return labels
 
 
 def fix_brightness_values(x):
-    return int(x)/255
+    return [int(x)/255]
 
+
+def output_to_digit(output):
+    prediction_value = 0
+    for i in range(output.row_count()):
+        if output[i][0] > output[prediction_value][0]:
+            prediction_value = i
+    return prediction_value
