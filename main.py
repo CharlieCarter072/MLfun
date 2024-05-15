@@ -6,15 +6,19 @@ def main():
     print("\nStarted program, loading data & weights...\n")  # initialize program
 
     data_matrix = loadTrainingDataMatrix()  # should be testing data, but for home testing the testing data doesn't have a label, so it screws up
-    data_matrix_no_labels = Matrix(data_matrix[1::])
+    data_matrix_values = Matrix(data_matrix[1::])  # heck naw (should never see matrix function outside matrix class
+    data_matrix_labels = data_matrix.row(0)
 
     print("Loading complete\n")
 
-    Testing_network = Network(16,16)
-    test_input = Matrix([[i] for i in data_matrix_no_labels.column(0)])  # fix this to be in the right plac3e
-    #print(display_digit(test_input))
-    print(Testing_network.raw_prediction(test_input))
-    print(f"expected result: {data_matrix.items[0][0] * 255}")  # the * 255 is sketchy, but alright for now, also sketchy labels
+    test_value = 3
+
+    Testing_network = Network(16, 16)  # clean
+    test_input = vectorize(data_matrix_values.column(test_value))  # fix this to be in the right place (heck naw + vectorize)
+    print(Testing_network.raw_prediction(test_input))  # (heck naw pt. 2)
+    print(f"expected result: {data_matrix.items[0][test_value] * 255}")  # heck naw * 2
+    display_digit(vectorize(data_matrix_values.column(test_value)))
+
 
 main()
 

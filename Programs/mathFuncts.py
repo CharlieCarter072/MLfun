@@ -33,6 +33,7 @@ def label(n):
         ]
     return labels[n - 1]
 
+
 def vectorize(lst):
     return Matrix([[i] for i in lst])
 
