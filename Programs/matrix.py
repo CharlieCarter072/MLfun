@@ -35,6 +35,9 @@ class Matrix:
     def get_data(self):
         return Matrix(self.items[1::])
 
+    def edit_column(self, column_index, new_column):
+        pass
+
 
 def mat_mul(a, b):
     final_matrix = Matrix([[dot_product(a.row(i), b.column(j)) for j in range(b.column_count())] for i in range(a.row_count())])

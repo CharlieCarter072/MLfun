@@ -51,3 +51,12 @@ class Network:
             total += difference_squared(label_to_vector(labeled_data_batch.column(i).get_label()), self.raw_prediction(labeled_data_batch.column(i).get_data()))
         return total / labeled_data_batch.column_count()
 
+    def train_cycle(self, learning_rate):
+        pass
+
+    def store_weights(self):
+        pass
+
+    def load_weights(self):
+        pass
+

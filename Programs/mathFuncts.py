@@ -1,8 +1,11 @@
 import math
 
 
-def activation(num):  # activation function
-    return 1 / (1 + (math.e ** (0 - num)))
+def activation(x, derivative):  # activation function
+    if derivative:
+        return activation(x, False) * (1 - activation(x, False))
+    else:
+        return 1 / (1 + (math.e ** (0 - x)))
 
 
 def label_to_vector(n):
