@@ -1,4 +1,4 @@
-from LFS.Load_Data import *
+from LFS.load_data import *
 from Programs.network import *
 
 
@@ -14,7 +14,8 @@ def main():
 
     display_digit(data_matrix.column(test_value).get_data())
 
-    testing_network = Network(16, 16)  # clean
+    testing_network = Network(16, 16)
+    testing_network.load_weights()
     test_input = data_matrix.column(test_value).get_data()
     output = testing_network.raw_prediction(test_input)
     print(output)
@@ -25,4 +26,6 @@ def main():
 
 
 main()
+
+
 

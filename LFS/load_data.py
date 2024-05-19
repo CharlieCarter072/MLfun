@@ -22,12 +22,11 @@ def loadTestingDataMatrix():
 def display_digit(data_in):
     print("-"*(28*3 + 2))
     for i in range(28):
-        #print([{0: " ", 1: "#"}[round(data_in[28*i + j][0])] for j in range(28)])
-        temp_string = ("|")
+        temp_string = "|"
         for j in range(28):
             temp_string += {0: "   ", 1: "###"}[round(data_in[28*i + j][0])]
         temp_string += "|"
         print(temp_string)
-    print("-" *(28*3 + 2))
+    print("-" * (28 * 3 + 2))
 
 

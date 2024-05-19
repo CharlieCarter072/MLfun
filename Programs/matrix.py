@@ -1,4 +1,4 @@
-from Programs.mathFuncts import *
+from Programs.math_functions import *
 
 
 class Matrix:
@@ -36,7 +36,8 @@ class Matrix:
         return Matrix(self.items[1::])
 
     def edit_column(self, column_index, new_column):
-        pass
+        for i in range(self.row_count()):
+            self.items[i][column_index] = new_column[i][0]
 
 
 def mat_mul(a, b):

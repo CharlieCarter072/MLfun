@@ -1,5 +1,6 @@
 from unittest import TestCase
 from Programs.network import *
+from LFS.load_data import *
 
 
 class TestLayer(TestCase):
