@@ -25,7 +25,7 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
     def feed_forward(self, data_in):  # input is a matrix
         data_in.add_row([1])
         unnormalized_output_data = mat_mul(self.weights, data_in)
-        return Matrix([[activation(i[0], False)] for i in unnormalized_output_data])
+        return Matrix([[sigmoid(i[0])] for i in unnormalized_output_data])
 
     def backpropagation(self):
         pass  # ?????
@@ -69,10 +69,15 @@ class Network:
             self.layer_3.weights.items = Matrix(
                 [list(map(float, raw_data[0].split(",")))[17 * i:17 * (i + 1):] for i in range(10)])
 
-    def train_cycle(self, learning_rate):
+    def train_cycle(self, learning_rate, training_batch):
         pass
         # calculate gradient through partial derivatives
         # adjust weights by subtracting gradient * learning rate from existing weights
+        # C is cost function, A is activation, W is weights, Z is weights * activation
+        # dC/W = dZ/W * dA/Z * dC/A
+        # dZ/W = previous layer activation
+        # dA/Z = dSigma
+        # dC/A = 2(activation - expected)
 
 
 def weights_to_save_data(data):
@@ -82,3 +87,6 @@ def weights_to_save_data(data):
             string_to_write += (str(j) + ",")
     return string_to_write[:-1:]
 
+
+def cost(data_batch):
+    pass  # 1/2 average of cost for each test

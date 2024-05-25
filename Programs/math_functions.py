@@ -1,11 +1,12 @@
 import math
 
 
-def activation(x, derivative):  # activation function
-    if derivative:
-        return activation(x, False) * (1 - activation(x, False))
-    else:
-        return 1 / (1 + (math.e ** (0 - x)))
+def sigmoid(x):  # activation function
+    return 1 / (1 + (math.e ** (0 - x)))
+
+
+def sigmoid_prime(x):
+    return sigmoid(x) * (1 - sigmoid(x))
 
 
 def label_to_vector(n):
