@@ -30,18 +30,26 @@ class Matrix:
         self.items.append(new_row)
 
     def get_label(self):
-        return Matrix([int(self.items[0][0]*255)])
+        return Matrix([self.items[0]])
 
     def get_data(self):
         return Matrix(self.items[1::])
+
+    def edit_row(self, row_index, new_row):
+        self.items[row_index] = new_row
 
     def edit_column(self, column_index, new_column):
         for i in range(self.row_count()):
             self.items[i][column_index] = new_column[i][0]
 
+    def transpose(self):
+        return Matrix([self.column(i).items for i in range(self.column_count())])
+
 
 def mat_mul(a, b):
-    final_matrix = Matrix([[dot_product(a.row(i), b.column(j)) for j in range(b.column_count())] for i in range(a.row_count())])
+    final_matrix = Matrix(
+        [[dot_product(a.row(i), b.column(j)) for j in range(b.column_count())] for i in range(a.row_count())]
+    )
     return final_matrix
 
 

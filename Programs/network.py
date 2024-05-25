@@ -8,13 +8,16 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
         self.rows = row_count
         self.columns = column_count
 
-        self.randomize_weights(column_count, row_count)
+        self.all_zeros(column_count, row_count)
 
     def __str__(self):
         return str(self.weights)
 
     def __getitem__(self, item):
         return self.weights[item]
+
+    def all_zeros(self, x, y):
+        self.weights = Matrix([[0 for i in range(x + 1)] for j in range(y)])
 
     def randomize_weights(self, x, y):
         self.weights = Matrix([[(random() - .5) for i in range(x + 1)] for j in range(y)])  # x+1 to add a bias value

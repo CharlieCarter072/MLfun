@@ -5,12 +5,11 @@ from Programs.network import *
 def main():
     print("\nStarted program, loading data & weights...\n")  # initialize program
 
-    data_matrix = loadTrainingDataMatrix()  # should be testing data, but for home testing the testing data doesn't have a label, so it screws up
-
+    data_matrix = load_training_data_matrix()
 
     print("Loading complete\n")
 
-    test_value = 5
+    test_value = 6
 
     display_digit(data_matrix.column(test_value).get_data())
 
