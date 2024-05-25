@@ -9,7 +9,7 @@ def sigmoid_prime(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 
-def label_to_vector(n):
+def digit_to_one_vector(n):
     labels = [[0] for i in range(10)]
     for i in range(len(labels)):
         if i == n:

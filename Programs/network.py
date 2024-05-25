@@ -17,10 +17,12 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
         return self.weights[item]
 
     def all_zeros(self, x, y):
-        self.weights = Matrix([[0 for i in range(x + 1)] for j in range(y)])
+        self.weights = Matrix([[0 for i in range(x + 1)] for j in range(y)])  # x+1 to add a bias value
 
-    def randomize_weights(self, x, y):
-        self.weights = Matrix([[(random() - .5) for i in range(x + 1)] for j in range(y)])  # x+1 to add a bias value
+    def randomize_weights(self):
+        self.weights = Matrix(
+            [[(random() - .5) for i in range(self.weights.column_count())] for j in range(self.weights.row_count())]
+        )
 
     def edit_weight(self, x, y, new_value):
         self.weights[x][y] = new_value
@@ -39,38 +41,47 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
 
 class Network:
     def __init__(self, hidden_layer_1_size, hidden_layer_2_size):
-        self.layer_1 = Layer(784, hidden_layer_1_size)
-        self.layer_2 = Layer(hidden_layer_1_size, hidden_layer_2_size)
-        self.layer_3 = Layer(hidden_layer_2_size, 10)
+        self.layers = []
+        self.layers.append(Layer(784, hidden_layer_1_size))
+        self.layers.append(Layer(hidden_layer_1_size, hidden_layer_2_size))
+        self.layers.append(Layer(hidden_layer_2_size, 10))
+
+    def randomize_layers(self):
+        for i in self.layers:
+            i.randomize_weights()
 
     def raw_prediction(self, input_data):
-        hidden_layer_1 = self.layer_1.feed_forward(input_data)
-        hidden_layer_2 = self.layer_2.feed_forward(hidden_layer_1)
-        return self.layer_3.feed_forward(hidden_layer_2)
+        output = input_data
+        for i in self.layers:
+            output = i.feed_forward(output)
+        return output
 
     def loss(self, labeled_data_batch):
         total = 0
         for i in range(labeled_data_batch.column_count()):
-            total += difference_squared(label_to_vector(labeled_data_batch.column(i).get_label()), self.raw_prediction(labeled_data_batch.column(i).get_data()))
+            total += difference_squared(
+                digit_to_one_vector(
+                    labeled_data_batch.column(i).get_label()
+                ), self.raw_prediction(labeled_data_batch.column(i).get_data())
+            )
         return total / labeled_data_batch.column_count()
 
     def save_weights(self):  # saves rows then columns, left to right, as if reading a book
-        with open("LFS/weights_save.csv", "w") as file:  #
-            file.write(weights_to_save_data(self.layer_1.weights.items))
-            file.write("\n")
-            file.write(weights_to_save_data(self.layer_2.weights.items))
-            file.write("\n")
-            file.write(weights_to_save_data(self.layer_3.weights.items))
+        with open("LFS/weights_save.csv", "w") as file:
+            for i in self.layers:
+                file.write(weights_to_save_data(i.weights.items))
+                file.write("\n")
 
     def load_weights(self):
         with open("LFS/weights_save.csv", "r") as file:
             raw_data = file.readlines()
-            self.layer_1.weights.items = Matrix(
-                [list(map(float, raw_data[0].split(",")))[785 * i:785 * (i + 1):] for i in range(16)])
-            self.layer_2.weights.items = Matrix(
-                [list(map(float, raw_data[0].split(",")))[17 * i:17 * (i + 1):] for i in range(16)])
-            self.layer_3.weights.items = Matrix(
-                [list(map(float, raw_data[0].split(",")))[17 * i:17 * (i + 1):] for i in range(10)])
+            print(f"save data length: {len(raw_data)}")
+            for i in range(len(self.layers)):
+                x = self.layers[i].weights.column_count()
+                y = self.layers[i].weights.row_count()
+                self.layers[i].weights.items = Matrix(
+                    [list(map(float, raw_data[i].split(",")))[x * j:x * (j + 1):] for j in range(y)]
+                )
 
     def train_cycle(self, learning_rate, training_batch):
         pass
