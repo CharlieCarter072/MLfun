@@ -5,27 +5,32 @@ from Programs.network import *
 def main():
     print("\nStarted program, loading data & weights...\n")  # initialize program
 
-    data_matrix = load_training_data_matrix()
+    data = load_training_data_matrix()
 
     print("Loading complete\n")
 
-    test_value = 6
+    testing_network = Network(16, 16)  # init network
+    testing_network.randomize_layers()
 
-    display_digit(data_matrix.column(test_value).get_data())
 
-    testing_network = Network(16, 16)
+    print("\n\nTraining network...\n")
 
-    testing_network.load_weights()  # absolutley broken, fix to work with list of weights
-    test_input = data_matrix.column(test_value).get_data()
-    output = testing_network.raw_prediction(test_input)
-    print(output)
-    print(f"\nPrediction: {[output_to_digit(output)]}")
-    print(f"Actual: {data_matrix.column(test_value).get_label()}\n")
-    print(f"\nLabel test: {digit_to_one_vector(data_matrix.column(test_value).get_label()[0])}")
-    print(f"\nLoss test: {testing_network.loss(data_matrix)}")
+    gens = 25
+
+    for i in range(gens):
+        testing_network.train_cycle(data, 64, 1)
+        print(f"{100*(i+1)/gens}% complete\n")
+    testing_network.save_weights()
+
+    print("\nTraining complete\n")
+    print("Testing trained network:\n")
+    for n in range(10):
+        test_input = data.column(n).get_data()  # test network prediction
+        test_output = testing_network.predict(test_input)
+        print(f"\nPrediction: {[output_to_digit(test_output)]}")
+        print(f"Actual: {data.column(n).get_label()}\n")
+        print(f"Output: {test_output}")
 
 
 main()
-
-
 

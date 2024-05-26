@@ -1,9 +1,9 @@
-from Programs.matrix import *
+from Programs.math_functions import *
 
 
 def load_training_data_matrix():  # row 0 is labels,
     with open("LFS/train.csv", "r") as train:
-        full_unformatted_data = train.readlines()[:100:]  # the [:100:] is for fast loading purposes
+        full_unformatted_data = train.readlines()[:1000:]  # the [:100:] is for fast loading purposes
         temp_matrix_full = Matrix(
             [list(map(fix_brightness_values, (i.strip().split(",")))) for i in full_unformatted_data]
         )  # labels get screwed up as they are also divided by 255 when the brightness values get formatted
@@ -15,7 +15,7 @@ def load_training_data_matrix():  # row 0 is labels,
 
 def load_testing_data_matrix():
     with open("LFS/test.csv", "r") as train:
-        full_unformatted_data = train.readlines()[:100:]  # the [:100:] is for fast loading purposes
+        full_unformatted_data = train.readlines()[:1000:]  # the [:100:] is for fast loading purposes
         temp_matrix_full = Matrix(
             [list(map(fix_brightness_values, (i.strip().split(",")))) for i in full_unformatted_data]
         )
