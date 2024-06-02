@@ -4,6 +4,8 @@ from Programs.math_functions import *
 
 class Layer:  # takes input, multiplies it with weights, normalizes result, and outputs
     def __init__(self, column_count, row_count):
+        self.column_count = column_count
+        self.row_count = row_count
         self.weights = all_zeros(column_count + 1, row_count)
         self.delta_weights = all_zeros(column_count + 1, row_count)
         self.rows = row_count
@@ -61,17 +63,30 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
         self.delta_weights = all_zeros(self.weights.column_count(), self.weights.row_count())
         self.passes = 0
 
+    def size(self):
+        return f"{self.column_count} x {self.row_count}"
+
 
 class Network:
-    def __init__(self, hidden_layer_1_size, hidden_layer_2_size):
+    def __init__(self):
         self.layers = []
-        self.layers.append(Layer(784, hidden_layer_1_size))  # not exactly scalable...
-        self.layers.append(Layer(hidden_layer_1_size, hidden_layer_2_size))
-        self.layers.append(Layer(hidden_layer_2_size, 10))
 
-    def randomize_layers(self):
+    def add_layer(self, input_size, output_size):
+        self.layers.append(Layer(input_size, output_size))
+
+    def remove_layer(self):
+        self.layers.pop()
+
+    def randomize_weights(self):
         for i in self.layers:
             i.randomize_weights()
+
+    def all_zeros(self):
+        for i in self.layers:
+            i.weights = all_zeros(i.weights.column_count(), i.weights.row_count())
+
+    def get_network_size(self):
+        return [i.size() for i in self.layers]
 
     def predict(self, input_data):
         output = input_data
@@ -79,14 +94,14 @@ class Network:
             output = i.feed_forward(output)
         return output
 
-    def save_weights(self):  # saves rows then columns, left to right, as if reading a book
-        with open("LFS/weights_save.csv", "w") as file:
+    def save_weights(self, path):  # saves rows then columns, left to right, as if reading a book
+        with open(path, "w") as file:
             for i in self.layers:
                 file.write(weights_to_save_data(i.weights.items))
                 file.write("\n")
 
-    def load_weights(self):
-        with open("LFS/weights_save.csv", "r") as file:
+    def load_weights(self, path):
+        with open(path, "r") as file:
             raw_data = file.readlines()
             for i in range(len(self.layers)):
                 x = self.layers[i].weights.column_count()
@@ -95,30 +110,27 @@ class Network:
                     [list(map(float, raw_data[i].split(",")))[x * j:x * (j + 1):] for j in range(y)]
                 )
 
-    def train_cycle(self, full_batch, batch_size, learning_rate):
-        err = 0
-        minibatch = Matrix(
-            [full_batch.column(randint(0, full_batch.column_count() - 1)) for i in range(batch_size)]
-        ).transpose()
-        input_batch = minibatch.get_data()
-        output_batch = minibatch.get_label()
-        for i in range(batch_size):  # if reading from book, i = j as i is unused
-            # output = input_batch[i]  # if it works, delete and replace output with predict(input_batch[i])
-            # for layer in self.layers:
-            #     output = layer.feed_forward(output)
-            output = self.predict(input_batch.column(i))
+    def train_cycle(self, full_batch, batch_size=64, learning_rate=10, generations=1000, verbose=True):
+        for n in range(generations):
+            err = 0
+            minibatch = Matrix(
+                [full_batch.column(randint(0, full_batch.column_count() - 1)) for i in range(batch_size)]
+            ).transpose()
+            input_batch = minibatch.get_data()
+            output_batch = minibatch.get_label()
+            for i in range(batch_size):
+                output = self.predict(input_batch.column(i))
 
-            err += difference_squared(digit_to_vector(output_batch.column(i)[0]), output)
+                err += difference_squared(digit_to_vector(output_batch.column(i)[0]), output)
 
-            error = difference_squared_prime(digit_to_vector(output_batch.column(i)[0]), output)
-            for layer in reversed(self.layers):  # verbaitum, likely some errors
-                error = layer.feed_backward(error)
+                error = difference_squared_prime(digit_to_vector(output_batch.column(i)[0]), output)
+                for layer in reversed(self.layers):
+                    error = layer.feed_backward(error)
 
-        for layer in self.layers:
-            layer.step(learning_rate)
-        verbose = True
-        if verbose:
-            print(f"Error: {err / batch_size}")
+            for layer in self.layers:
+                layer.step(learning_rate)
+            if verbose:
+                print(f"{n+1}/{generations} ({100 * (n + 1) / generations}%) complete | Error: {err / batch_size}\n")
 
 
 def weights_to_save_data(data):
@@ -127,7 +139,3 @@ def weights_to_save_data(data):
         for j in i:
             string_to_write += (str(j) + ",")
     return string_to_write[:-1:]
-
-
-def cost(data_batch):
-    pass  # 1/2 average of cost for each test

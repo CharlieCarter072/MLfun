@@ -15,3 +15,12 @@ class TestMatrixMultiply(TestCase):
         self.assertEqual(mat_mul(mat1, mat2).items, [[140, 146], [320, 335], [500, 524]])
 
 
+class TestMatrix(TestCase):
+    test_matrix = Matrix([[1, 2, 3], [4, 5, 6]])
+
+    def test_edit_column(self):
+        self.test_matrix.edit_column(1, Matrix([[7], [8]]))
+        self.assertEqual(self.test_matrix.items, [[1, 7, 3], [4, 8, 6]])
+        print(self.test_matrix.items)
+
+
