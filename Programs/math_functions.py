@@ -68,7 +68,7 @@ def dot_product(a, b):  # dot product, scores similarity
 
 
 def all_zeros(x, y):
-    return Matrix([[0 for i in range(x + 1)] for j in range(y)])  # x+1 to add a bias value
+    return Matrix([[0 for i in range(x)] for j in range(y)])  # x+1 to add a bias value
 
 
 def sigmoid(x):  # activation function
@@ -104,4 +104,4 @@ def difference_squared(expected_output, actual_output):
 
 
 def difference_squared_prime(expected_output, actual_output):
-    return Matrix([[(expected_output[i][0] - actual_output[i][0]) / 5] for i in range(10)])
+    return Matrix([[2 * (actual_output[i][0] - expected_output[i][0]) / 10] for i in range(10)])

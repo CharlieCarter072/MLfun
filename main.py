@@ -10,15 +10,14 @@ def main():
     print("Loading complete\n")
 
     testing_network = Network(16, 16)  # init network
-    testing_network.randomize_layers()
-
+    #testing_network.randomize_layers()
 
     print("\n\nTraining network...\n")
 
-    gens = 25
+    gens = 1000
 
     for i in range(gens):
-        testing_network.train_cycle(data, 64, 1)
+        testing_network.train_cycle(data, 64, 10)
         print(f"{100*(i+1)/gens}% complete\n")
     testing_network.save_weights()
 

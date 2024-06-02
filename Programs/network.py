@@ -4,15 +4,13 @@ from Programs.math_functions import *
 
 class Layer:  # takes input, multiplies it with weights, normalizes result, and outputs
     def __init__(self, column_count, row_count):
-        self.weights = Matrix([])
-        self.delta_weights = all_zeros(column_count, row_count)
+        self.weights = all_zeros(column_count + 1, row_count)
+        self.delta_weights = all_zeros(column_count + 1, row_count)
         self.rows = row_count
         self.columns = column_count
-        self.input_A = Matrix([])
-        self.input_B = Matrix([])
+        self.input_X = Matrix([])
+        self.input_Z = Matrix([])
         self.passes = 0
-
-        self.weights = all_zeros(column_count, row_count)
 
     def __str__(self):
         return str(self.weights)
@@ -30,31 +28,29 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
 
     def feed_forward(self, data_in):  # input is a matrix
         data_in.add_row([1])
-        self.input_A = data_in
-        self.input_B = mat_mul(self.weights, self.input_A)
+        self.input_X = data_in
+        self.input_Z = mat_mul(self.weights, self.input_X)
 
-        return Matrix([[sigmoid(i[0])] for i in self.input_B])
+        return Matrix([[sigmoid(i[0])] for i in self.input_Z])
 
     def feed_backward(self, output_error):
         # Activation backfeed
-        mid_error = all_zeros(output_error.column_count() - 1, output_error.row_count())
+        mid_error = all_zeros(output_error.column_count(), output_error.row_count())
 
-        for y in range(mid_error.row_count()):
-            for x in range(mid_error.column_count()):
-                mid_error[y][x] = sigmoid_prime(self.input_B)[y][x] * output_error[y][x]
+        for i in range(mid_error.row_count()):
+            mid_error[i][0] = output_error[i][0] * sigmoid_prime(self.input_Z)[i][0]
 
         # Connected layer backfeed
-        input_error = mat_mul(mid_error.transpose(), self.weights)
+        input_error = mat_mul(self.weights.transpose(), mid_error)
 
-        weights_error = mat_mul(mid_error, self.input_A.transpose())  # if its not working, transpose self.input (switched?)
+        weights_error = mat_mul(mid_error, self.input_X.transpose())  # if its not working, transpose self.input (switched?)
 
         for y in range(self.delta_weights.row_count()):
             for x in range(self.delta_weights.column_count()):
                 self.delta_weights[y][x] += weights_error[y][x]
 
         self.passes += 1
-
-        adjusted_error = Matrix([input_error.row(i)[:-1:] for i in range(input_error.row_count())]).transpose()
+        adjusted_error = Matrix(input_error[:-1:])
 
         return adjusted_error
 
@@ -62,7 +58,7 @@ class Layer:  # takes input, multiplies it with weights, normalizes result, and 
         for y in range(self.weights.row_count()):
             for x in range(self.weights.column_count()):
                 self.weights[y][x] -= (learning_rate * self.delta_weights[y][x] / self.passes)
-        self.delta_weights = all_zeros(self.weights.column_count() - 1, self.weights.row_count())
+        self.delta_weights = all_zeros(self.weights.column_count(), self.weights.row_count())
         self.passes = 0
 
 
@@ -112,9 +108,9 @@ class Network:
             #     output = layer.feed_forward(output)
             output = self.predict(input_batch.column(i))
 
-            err += difference_squared(digit_to_vector(output_batch.column(i)), output)
+            err += difference_squared(digit_to_vector(output_batch.column(i)[0]), output)
 
-            error = difference_squared_prime(digit_to_vector(output_batch.column(i)), output)
+            error = difference_squared_prime(digit_to_vector(output_batch.column(i)[0]), output)
             for layer in reversed(self.layers):  # verbaitum, likely some errors
                 error = layer.feed_backward(error)
 
