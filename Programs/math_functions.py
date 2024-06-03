@@ -1,4 +1,5 @@
 import math
+from PIL import Image
 
 
 class Matrix:
@@ -105,3 +106,16 @@ def difference_squared(expected_output, actual_output):
 
 def difference_squared_prime(expected_output, actual_output):
     return Matrix([[2 * (actual_output[i][0] - expected_output[i][0]) / 10] for i in range(10)])
+
+
+def image_to_data(file_name):
+    image = Image.open(file_name)
+    image = image.convert("RGB")
+    print(f"img size: {image.size}")
+    final_list = []
+    for y in range(28):
+        for x in range(28):
+            r, g, b = image.getpixel((x, y))
+            brightness = sum(image.getpixel((x, y))) / (3 * 255)
+            final_list.append([brightness])
+    return Matrix(final_list)

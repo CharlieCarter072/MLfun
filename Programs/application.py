@@ -5,7 +5,7 @@ from Programs.network import *
 def application():
     print("\nStarted program, loading data...")
     train_data = load_training_data_matrix(True)
-    #test_data = load_testing_data_matrix(True)  # not fully working
+    test_data = load_testing_data_matrix(True)
     print("Loading complete")
 
     network = Network()
@@ -77,6 +77,8 @@ def application():
                         "\n(1) Back\n"
                         "(2) Test with random data sample\n"
                         "(3) Test with custom image\n"
+                        "(4) Test unlabeled data\n"
+                        "(5) Test accuracy\n"
                         ">>> "
                     )
                     match choice_b:
@@ -92,7 +94,38 @@ def application():
                             print(f"\nNetwork prediction: {output_to_digit(test_output)}")
                             print(f"Expected result: {test_sample.get_label()[0]}")
                         case "3":
-                            pass  # good luck with this one
+                            file_name = input("\nEnter file name\n>>> ")
+                            try:
+                                image_data = image_to_data("CustomDigits/" + file_name)
+                                test_output = network.predict(image_data)
+                                print("")
+                                if display_details:
+                                    display_digit(image_data)
+                                    print(test_output)
+                                print(f"\nNetwork prediction: {output_to_digit(test_output)}")
+                            except:
+                                print(f"\nSorry, {file_name} doesn't exist.")
+                        case "4":
+                            test_sample = test_data.column(randint(0, test_data.column_count() - 1))
+                            test_output = network.predict(test_sample)
+                            print("")
+                            display_digit(test_sample)
+                            print(test_output)
+                            print(f"\nNetwork prediction: {output_to_digit(test_output)}")
+                        case "5":
+                            samples = 500
+                            minibatch = Matrix(
+                                [train_data.column(randint(0, train_data.column_count() - 1)) for i in
+                                 range(samples)]
+                            ).transpose()
+                            input_batch = minibatch.get_data()
+                            output_batch = minibatch.get_label()
+                            correct = 0
+                            print("\nTesting accuracy...")
+                            for i in range(samples):
+                                if output_to_digit(network.predict(input_batch.column(i))) == output_batch.column(i)[0]:
+                                    correct += 1
+                            print(f"\nAccuracy: {100*correct/samples}% (of {samples} random samples)")
                         case _:
                             print("\nInvalid input")
                 active = True
@@ -100,7 +133,7 @@ def application():
                 print("\nLoading training dataset (this may take a while)...")
                 train_data = load_training_data_matrix()
                 print("Loading complete")
-                network.train_cycle(train_data)
+                network.train_cycle(train_data, 64, 10, 100, True)
             case _:
                 print("\nInvalid input")
 
